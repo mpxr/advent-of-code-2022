@@ -15,23 +15,14 @@ fn main() -> io::Result<()> {
 
         // part 1:
 
-        let rock1 = "A";
-        let rock2 = "X";
-
-        let paper1 = "B";
-        let paper2 = "Y";
-
-        let scissors1 = "C";
-        let scissors2 = "Z";
-
-        if (first == rock1 && second == rock2)
-            || (first == paper1 && second == paper2)
-            || (first == scissors1 && second == scissors2)
+        if (rock(first) && rock(second))
+            || (paper(first) && paper(second))
+            || (scissors(first) && scissors(second))
         {
             score1 += 3;
-        } else if (first == scissors1 && second == rock2)
-            || (first == paper1 && second == scissors2)
-            || (first == rock1 && second == paper2)
+        } else if (scissors(first) && rock(second))
+            || (paper(first) && scissors(second))
+            || (rock(first) && paper(second))
         {
             score1 += 6;
         } else {
@@ -46,35 +37,39 @@ fn main() -> io::Result<()> {
             "X" => score2 += 0, //loose
             "Y" => score2 += 3, //draw
             "Z" => score2 += 6, //win
-            _ => println!("invalid"),
+            _ => score2 += 0
         }
 
-        if second == scissors2 {
+        const ROCK_SCORE:usize = 1;
+        const PAPER_SCORE:usize = 2;
+        const SCISSORS_SCORE:usize = 3;
+
+        if scissors(second) {
             // I need to win
-            if first == rock1 {
-                score2 += shape_score(paper2);
-            } else if first == paper1 {
-                score2 += shape_score(scissors2);
-            } else if first == scissors1 {
-                score2 += shape_score(rock2);
+            if rock(first) {
+                score2 += PAPER_SCORE;
+            } else if paper(first) {
+                score2 += SCISSORS_SCORE;
+            } else if scissors(first) {
+                score2 += ROCK_SCORE;
             }
-        } else if second == rock2 {
+        } else if rock(second) {
             // I need to loose
-            if first == rock1 {
-                score2 += shape_score(scissors2);
-            } else if first == paper1 {
-                score2 += shape_score(rock2);
-            } else if first == scissors1 {
-                score2 += shape_score(paper2);
+            if rock(first) {
+                score2 += SCISSORS_SCORE;
+            } else if paper(first) {
+                score2 += ROCK_SCORE;
+            } else if scissors(first) {
+                score2 += PAPER_SCORE;
             }
-        } else if second == paper2 {
+        } else if paper(second) {
             // draw
-            if first == rock1 {
-                score2 += shape_score(rock2);
-            } else if first == paper1 {
-                score2 += shape_score(paper2);
-            } else if first == scissors1 {
-                score2 += shape_score(scissors2);
+            if rock(first) {
+                score2 += ROCK_SCORE;
+            } else if paper(first) {
+                score2 += PAPER_SCORE;
+            } else if scissors(first) {
+                score2 += SCISSORS_SCORE;
             }
         }
     }
@@ -91,4 +86,25 @@ fn shape_score(val: &str) -> i32 {
         "Z" => 3,
         _ => 0,
     }
+}
+
+fn rock(val: &str) -> bool {
+    if val == "X" || val == "A" {
+        return true;
+    }
+    return false;
+}
+
+fn paper(val: &str) -> bool {
+    if val == "Y" || val == "B" {
+        return true;
+    }
+    return false;
+}
+
+fn scissors(val: &str) -> bool {
+    if val == "Z" || val == "C" {
+        return true;
+    }
+    return false;
 }
